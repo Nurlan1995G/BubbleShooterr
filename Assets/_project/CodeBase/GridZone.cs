@@ -4,10 +4,10 @@ namespace Assets._project.CodeBase
 {
     public class GridZone
     {
-        private int _rows;         // Количество строк
-        private int _columns;      // Количество столбцов
-        private float _cellSize;   // Размер ячейки
-        private float _offsetX = 0.5f;  // Смещение для четных строк
+        private int _rows;         
+        private int _columns;      
+        private float _cellSize;   
+        private float _offsetX = 0.5f;  
 
         public GridZone(int rows, int columns, float cellSize)
         {
@@ -16,7 +16,6 @@ namespace Assets._project.CodeBase
             _cellSize = cellSize;
         }
 
-        // Получение позиции ячейки на сцене по индексу строки и столбца
         public Vector3 GetCellPosition(int row, int col)
         {
             Vector3 startPos = new Vector3(-_columns / 2f * _cellSize, _rows / 2f * _cellSize, -1);
