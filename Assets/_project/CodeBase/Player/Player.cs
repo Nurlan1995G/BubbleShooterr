@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 
 namespace Assets._project.CodeBase
 {
@@ -8,9 +10,10 @@ namespace Assets._project.CodeBase
         [SerializeField] private float _maxShootingForce = 15f;
         [SerializeField] private float _minShootingForce = 5f;
         [SerializeField] private LineRenderer _lineRenderer;
-        [SerializeField] private float _maxLineLength = 5f;  // Максимальная длина луча
+        [SerializeField] private float _maxLineLength = 5f;
 
         private BallManager _ballManager;
+        private Camera _camera;
         private Ball _currentBall;
         private float _shootingForce;
         private bool _isCharging;
@@ -18,6 +21,8 @@ namespace Assets._project.CodeBase
         public void Construct(BallManager ballManager)
         {
             _ballManager = ballManager;
+
+            _camera = Camera.main;
         }
 
         private void Update()
@@ -35,32 +40,18 @@ namespace Assets._project.CodeBase
                 {
                     _currentBall.transform.position = _shootingPoint.position;
                     _currentBall.gameObject.SetActive(true);
-
-                    Rigidbody2D rb = _currentBall.GetComponent<Rigidbody2D>();
-
-                    if (rb != null)
-                    {
-                        rb.velocity = Vector2.zero;
-                        rb.angularVelocity = 0f;
-                    }
                 }
             }
 
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
             Vector2 aimDirection = new Vector2(mousePosition.x - transform.position.x, mousePosition.y - transform.position.y);
             aimDirection.Normalize();
 
-            // Отображаем луч, показывающий направление выстрела
             DrawAimingLine(aimDirection);
 
-            // Начинаем заряжать "пружину" при нажатии правой кнопки мыши
             if (Input.GetMouseButton(1))
-            {
                 _isCharging = true;
-                _shootingForce = Mathf.Lerp(_minShootingForce, _maxShootingForce, Time.time);
-            }
 
-            // Выстрел при отпускании правой кнопки
             if (_isCharging && Input.GetMouseButtonUp(1))
             {
                 ShootBall(aimDirection);
@@ -72,14 +63,10 @@ namespace Assets._project.CodeBase
         {
             if (_currentBall != null)
             {
-                Rigidbody2D rb = _currentBall.GetComponent<Rigidbody2D>();
-                if (rb != null)
-                {
-                    rb.velocity = Vector2.zero;
-                    rb.AddForce(direction * _shootingForce, ForceMode2D.Impulse);
-                }
-
-                _currentBall = null;  // Шар выпущен, нужно получить новый
+                float force = Mathf.Lerp(_minShootingForce, _maxShootingForce, Time.time);
+                _currentBall.MoveBall(direction, force);
+                StartCoroutine(DelayNextBall());
+                //_currentBall = null;
             }
         }
 
@@ -91,6 +78,20 @@ namespace Assets._project.CodeBase
 
             Vector3 endPosition = _shootingPoint.position + (Vector3)aimDirection * _maxLineLength;
             _lineRenderer.SetPosition(1, endPosition);
+        }
+
+        private IEnumerator DelayNextBall()
+        {
+            yield return new WaitForSeconds(0.5f);
+            _currentBall = null;
+           /* Ball newBall = _ballManager.GetRandomBall();  
+            if (newBall != null)
+            {
+                newBall.transform.position = _shootingPoint.position;  
+                newBall.gameObject.SetActive(true);  
+
+                _currentBall = newBall;  
+            }*/
         }
     }
 }
