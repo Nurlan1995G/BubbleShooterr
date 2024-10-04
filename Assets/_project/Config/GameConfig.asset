@@ -16,4 +16,4 @@ MonoBehaviour:
     TotalRows: 10
     TotalColumns: 8
     RowsToFill: 5
-    CellSize: 0.86
+    CellSize: 0.87

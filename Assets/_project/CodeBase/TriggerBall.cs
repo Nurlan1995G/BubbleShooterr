@@ -5,24 +5,17 @@ namespace Assets._project.CodeBase
 {
     public class TriggerBall : MonoBehaviour
     {
-        [SerializeField] private bool _isMoving = false;
         [SerializeField] private Ball _ball;
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (other.TryGetComponent(out Ball ball))
+            if (collision.gameObject.TryGetComponent(out Ball otherBall))
             {
-                if (_isMoving && ball != null)
-                    ResolveCollision(ball);
+                if (_ball.ColorBall == otherBall.ColorBall)
+                    CheckForMatch(otherBall);
+                else
+                    _ball.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             }
-        }
-
-        private void ResolveCollision(Ball otherBall)
-        {
-            if (_ball.ColorBall == otherBall.ColorBall)
-                CheckForMatch(otherBall);
-            else
-                BounceBack();
         }
 
         private void CheckForMatch(Ball otherBall)
@@ -54,7 +47,9 @@ namespace Assets._project.CodeBase
             }
         }
 
-        private void BounceBack() =>
+        /*private void BounceBack()
+        {
             transform.position += new Vector3(0, 0.2f, 0);
+        }*/
     }
 }

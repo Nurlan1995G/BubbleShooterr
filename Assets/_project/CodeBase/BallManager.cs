@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets._project.CodeBase
@@ -6,11 +7,11 @@ namespace Assets._project.CodeBase
     public class BallManager : MonoBehaviour
     {
         private Dictionary<string, List<Ball>> _ballsByColor; 
-        private List<Ball> _availableBalls;
+        private List<Ball> _balls;
 
         public void Construct(List<Ball> balls)
         {
-            _availableBalls = balls;
+            _balls = balls;
 
             PopulateBallsByColor();
         }
@@ -19,7 +20,7 @@ namespace Assets._project.CodeBase
         {
             _ballsByColor = new Dictionary<string, List<Ball>>();
 
-            foreach (Ball ball in _availableBalls)
+            foreach (Ball ball in _balls)
             {
                 if (!_ballsByColor.ContainsKey(ball.ColorBall))
                     _ballsByColor.Add(ball.ColorBall, new List<Ball>());
@@ -30,38 +31,15 @@ namespace Assets._project.CodeBase
 
         public Ball GetRandomBall()
         {
-            if (_availableBalls.Count > 0)
+            if (_balls.Count > 0)
             {
-                int randomIndex = Random.Range(0, _availableBalls.Count);
-                Ball ball = _availableBalls[randomIndex];
-                _availableBalls.RemoveAt(randomIndex);
+                int randomIndex = Random.Range(0, _balls.Count);
+                Ball ball = _balls[randomIndex];
+                _balls.RemoveAt(randomIndex);
                 return ball;
             }
 
             return null;
-        }
-
-        public Ball GetBallByColor(string color)
-        {
-            if (_ballsByColor.ContainsKey(color) && _ballsByColor[color].Count > 0)
-            {
-                Ball ball = _ballsByColor[color][0];
-                _ballsByColor[color].RemoveAt(0);
-                _availableBalls.Remove(ball);
-                return ball;
-            }
-
-            return null;
-        }
-
-        public void ReturnBallToManager(Ball ball)
-        {
-            if (!_ballsByColor.ContainsKey(ball.ColorBall))
-                _ballsByColor.Add(ball.ColorBall, new List<Ball>());
-
-            _ballsByColor[ball.ColorBall].Add(ball);
-            _availableBalls.Add(ball);
-            ball.gameObject.SetActive(false); 
         }
     }
 }
