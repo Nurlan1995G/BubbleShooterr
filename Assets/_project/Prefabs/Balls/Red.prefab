@@ -99,7 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e82d835d49338a45b00f346cc4e2f27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rigidbody2D: {fileID: 3117856481810515290}
+  _rigidbody2D: {fileID: 3117856481810515290}
+  _triggerBall: {fileID: 8102355305244261120}
+  <BallColorType>k__BackingField: 1
   <ColorBall>k__BackingField: Red
 --- !u!58 &6274964837927353194
 CircleCollider2D:
@@ -129,7 +131,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31656ec55207b9b47add67fb6b6587df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ball: {fileID: -7164799444453568208}
 --- !u!50 &3117856481810515290
 Rigidbody2D:
   serializedVersion: 4

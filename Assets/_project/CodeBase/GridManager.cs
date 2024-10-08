@@ -23,6 +23,39 @@ namespace Assets._project.CodeBase
             FillGridWithRandomBalls();
         }
 
+        public void PlaceBallAtNearestFreePoint(Ball ball)
+        {
+            Point nearestFreePoint = FindNearestFreePoint(ball.transform.position);
+
+            if (nearestFreePoint != null)
+            {
+                ball.RemoveFromCurrentPoint(); 
+                nearestFreePoint.PlaceBall(ball);  
+            }
+        }
+
+        public Point FindNearestFreePoint(Vector3 position)
+        {
+            Point nearestPoint = null;
+            float minDistance = float.MaxValue;
+
+            foreach (Point point in _cells)
+            {
+                if (!point.IsBusy)
+                {
+                    float distance = Vector3.Distance(position, point.transform.position);
+
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        nearestPoint = point;
+                    }
+                }
+            }
+
+            return nearestPoint;
+        }
+
         private void InitializeCells()
         {
             int index = 0;

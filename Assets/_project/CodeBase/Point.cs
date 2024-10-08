@@ -1,11 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets._project.CodeBase
 {
     public class Point : MonoBehaviour
     {
-        private bool _isBusy;
+        [SerializeField] private bool _isBusy;
 
         public bool IsBusy => _isBusy;
 
@@ -15,6 +14,7 @@ namespace Assets._project.CodeBase
             {
                 ball.transform.position = transform.position;
                 ball.gameObject.SetActive(true);
+                ball.SetCurrentPoint(this);
                 _isBusy = true; 
             }
         }

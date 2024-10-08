@@ -5,7 +5,16 @@ namespace Assets._project.CodeBase
 {
     public class TriggerBall : MonoBehaviour
     {
-        [SerializeField] private Ball _ball;
+        private Ball _ball;
+        private GridManager _gridManager;
+
+        private Point _point;
+
+        public void Construct(Ball ball, GridManager gridManager)
+        {
+            _ball = ball ?? throw new System.ArgumentNullException(nameof(ball));
+            _gridManager = gridManager ?? throw new System.ArgumentNullException(nameof(gridManager));
+        }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
@@ -14,7 +23,7 @@ namespace Assets._project.CodeBase
                 if (_ball.ColorBall == otherBall.ColorBall)
                     CheckForMatch(otherBall);
                 else
-                    SetStopping();
+                    SetPointToBall(otherBall);
             }
         }
 
@@ -22,6 +31,7 @@ namespace Assets._project.CodeBase
         {
             List<Ball> matchingBalls = new List<Ball>();
             FindMatchingBalls(_ball, ref matchingBalls);
+            otherBall.RemoveFromCurrentPoint();
 
             if (matchingBalls.Count > 2)
             {
@@ -30,10 +40,10 @@ namespace Assets._project.CodeBase
             }
         }
 
-        private void SetStopping()
+        private void SetPointToBall(Ball ball)
         {
-            _ball.Rigidbody2D.velocity = Vector2.zero;
-            _ball.Rigidbody2D.isKinematic = true;
+            _gridManager.PlaceBallAtNearestFreePoint(ball);
+            _ball.StoppingMoving();
         }
 
         private void FindMatchingBalls(Ball currentBall, ref List<Ball> matchingBalls)

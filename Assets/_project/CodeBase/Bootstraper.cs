@@ -22,6 +22,13 @@ namespace Assets._project.CodeBase
             GridZone gridZone = new (_gameConfig.ManagerData, _startPosition);
 
             _gridManager.Construct(gridZone, _gameConfig.ManagerData, _ballManager, _cells);
+            InitBall();
+        }
+
+        private void InitBall()
+        {
+            foreach (var ball in _balls)
+                ball.Construct(_gridManager);
         }
     }
 }
