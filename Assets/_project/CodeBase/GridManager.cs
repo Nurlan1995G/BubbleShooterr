@@ -1,4 +1,5 @@
 ﻿using Assets._project.Config;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets._project.CodeBase
@@ -8,30 +9,48 @@ namespace Assets._project.CodeBase
         private BallManager _ballManager;
         private GridZone _gridZone;
         private ManagerData _managerData;
+        private List<Cell> _cells; 
 
-        public void Construct(GridZone gridZone, ManagerData managerData, BallManager ballManager)
+        public void Construct(GridZone gridZone, ManagerData managerData, BallManager ballManager, 
+            List<Cell> cells)
         {
             _gridZone = gridZone;
             _managerData = managerData;
             _ballManager = ballManager;
+            _cells = cells;
 
+            InitializeCells();
             FillGridWithRandomBalls();
+        }
+
+        private void InitializeCells()
+        {
+            int index = 0;
+
+            for (int row = 0; row < _managerData.TotalRows; row++)
+            {
+                for (int col = 0; col < _managerData.TotalColumns; col++)
+                {
+                    if (index >= _cells.Count)
+                        break;
+
+                    Vector3 position = _gridZone.GetCellPosition(row, col);
+                    _cells[index].transform.position = position;
+                    index++;
+                }
+            }
         }
 
         private void FillGridWithRandomBalls()
         {
-            for (int row = 0; row < _managerData.RowsToFill; row++)
+            foreach (Cell cell in _cells)
             {
-                for (int col = 0; col < _managerData.TotalColumns; col++)
+                if (!cell.IsBusy)  
                 {
                     Ball ball = _ballManager.GetRandomBall();
 
                     if (ball != null)
-                    {
-                        Vector3 position = _gridZone.GetCellPosition(row, col);
-                        ball.transform.position = position;
-                        ball.gameObject.SetActive(true);
-                    }
+                        cell.PlaceBall(ball);
                 }
             }
         }

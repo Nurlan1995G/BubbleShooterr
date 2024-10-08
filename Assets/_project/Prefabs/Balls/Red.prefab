@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e82d835d49338a45b00f346cc4e2f27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rigidbody2D: {fileID: 3117856481810515290}
+  Rigidbody2D: {fileID: 3117856481810515290}
   <ColorBall>k__BackingField: Red
 --- !u!58 &6274964837927353194
 CircleCollider2D:

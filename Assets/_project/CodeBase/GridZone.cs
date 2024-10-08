@@ -4,10 +4,10 @@ namespace Assets._project.CodeBase
 {
     public class GridZone
     {
-        private int _rows;         
-        private int _columns;      
-        private float _cellSize;   
-        private float _offsetX = 0.5f;  
+        private int _rows;
+        private int _columns;
+        private float _cellSize;
+        private float _offsetX = 0.5f;
 
         public GridZone(int rows, int columns, float cellSize)
         {

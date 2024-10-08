@@ -14,7 +14,7 @@ namespace Assets._project.CodeBase
                 if (_ball.ColorBall == otherBall.ColorBall)
                     CheckForMatch(otherBall);
                 else
-                    _ball.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    SetStopping();
             }
         }
 
@@ -28,6 +28,12 @@ namespace Assets._project.CodeBase
                 foreach (Ball ball in matchingBalls)
                     Destroy(ball.gameObject);
             }
+        }
+
+        private void SetStopping()
+        {
+            _ball.Rigidbody2D.velocity = Vector2.zero;
+            _ball.Rigidbody2D.isKinematic = true;
         }
 
         private void FindMatchingBalls(Ball currentBall, ref List<Ball> matchingBalls)
@@ -46,10 +52,5 @@ namespace Assets._project.CodeBase
                 }
             }
         }
-
-        /*private void BounceBack()
-        {
-            transform.position += new Vector3(0, 0.2f, 0);
-        }*/
     }
 }

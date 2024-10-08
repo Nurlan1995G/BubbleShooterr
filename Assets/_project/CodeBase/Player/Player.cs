@@ -15,8 +15,10 @@ namespace Assets._project.CodeBase
         private BallManager _ballManager;
         private Camera _camera;
         private Ball _currentBall;
+        
         private float _shootingForce;
         private bool _isCharging;
+        private bool _hatShot;
 
         public void Construct(BallManager ballManager)
         {
@@ -27,7 +29,8 @@ namespace Assets._project.CodeBase
 
         private void Update()
         {
-            AimAndShoot();
+            if(!_hatShot)
+                AimAndShoot();
         }
 
         private void AimAndShoot()
@@ -65,8 +68,8 @@ namespace Assets._project.CodeBase
             {
                 float force = Mathf.Lerp(_minShootingForce, _maxShootingForce, Time.time);
                 _currentBall.MoveBall(direction, force);
+                _hatShot = true;
                 StartCoroutine(DelayNextBall());
-                //_currentBall = null;
             }
         }
 
@@ -84,14 +87,7 @@ namespace Assets._project.CodeBase
         {
             yield return new WaitForSeconds(0.5f);
             _currentBall = null;
-           /* Ball newBall = _ballManager.GetRandomBall();  
-            if (newBall != null)
-            {
-                newBall.transform.position = _shootingPoint.position;  
-                newBall.gameObject.SetActive(true);  
-
-                _currentBall = newBall;  
-            }*/
+            _hatShot = false;
         }
     }
 }

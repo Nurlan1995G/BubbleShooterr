@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets._project.CodeBase
@@ -16,19 +15,6 @@ namespace Assets._project.CodeBase
             PopulateBallsByColor();
         }
 
-        private void PopulateBallsByColor()
-        {
-            _ballsByColor = new Dictionary<string, List<Ball>>();
-
-            foreach (Ball ball in _balls)
-            {
-                if (!_ballsByColor.ContainsKey(ball.ColorBall))
-                    _ballsByColor.Add(ball.ColorBall, new List<Ball>());
-
-                _ballsByColor[ball.ColorBall].Add(ball);
-            }
-        }
-
         public Ball GetRandomBall()
         {
             if (_balls.Count > 0)
@@ -40,6 +26,24 @@ namespace Assets._project.CodeBase
             }
 
             return null;
+        }
+
+        public void AddAfterReset(Ball ball)
+        {
+
+        }
+
+        private void PopulateBallsByColor()
+        {
+            _ballsByColor = new Dictionary<string, List<Ball>>();
+
+            foreach (Ball ball in _balls)
+            {
+                if (!_ballsByColor.ContainsKey(ball.ColorBall))
+                    _ballsByColor.Add(ball.ColorBall, new List<Ball>());
+
+                _ballsByColor[ball.ColorBall].Add(ball);
+            }
         }
     }
 }
