@@ -9,10 +9,10 @@ namespace Assets._project.CodeBase
         private BallManager _ballManager;
         private GridZone _gridZone;
         private ManagerData _managerData;
-        private List<Cell> _cells; 
+        private List<Point> _cells; 
 
         public void Construct(GridZone gridZone, ManagerData managerData, BallManager ballManager, 
-            List<Cell> cells)
+            List<Point> cells)
         {
             _gridZone = gridZone;
             _managerData = managerData;
@@ -43,7 +43,7 @@ namespace Assets._project.CodeBase
 
         private void FillGridWithRandomBalls()
         {
-            foreach (Cell cell in _cells)
+            foreach (Point cell in _cells)
             {
                 if (!cell.IsBusy)  
                 {

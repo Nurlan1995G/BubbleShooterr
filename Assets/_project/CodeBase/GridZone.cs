@@ -1,29 +1,30 @@
-﻿using UnityEngine;
+﻿using Assets._project.Config;
+using UnityEngine;
 
 namespace Assets._project.CodeBase
 {
     public class GridZone
     {
-        private int _rows;
-        private int _columns;
-        private float _cellSize;
+        private ManagerData _managerData;
+        private Vector3 _startPosition;
         private float _offsetX = 0.5f;
 
-        public GridZone(int rows, int columns, float cellSize)
+        public GridZone(ManagerData managerData, Vector3 startPosition)
         {
-            _rows = rows;
-            _columns = columns;
-            _cellSize = cellSize;
+            _managerData = managerData;
+            _startPosition = startPosition;
         }
 
         public Vector3 GetCellPosition(int row, int col)
         {
-            Vector3 startPos = new Vector3(-_columns / 2f * _cellSize, _rows / 2f * _cellSize, -1);
-            float xOffset = (row % 2 == 0) ? 0 : _offsetX * _cellSize;
-            float xPos = startPos.x + col * _cellSize + xOffset;
-            float yPos = startPos.y - row * _cellSize;
+            Vector3 startPos = new Vector3(_startPosition.x - _managerData.TotalColumns / 2f * _managerData.CellSize,
+              _startPosition.y + _managerData.RowsToFill / 2f * _managerData.CellSize, _startPosition.z);
 
-            return new Vector3(xPos, yPos, -1);
+            float xOffset = (row % 2 == 0) ? 0 : _offsetX * _managerData.CellSize;
+            float xPos = startPos.x + col * _managerData.CellSize + xOffset;
+            float yPos = startPos.y - row * _managerData.CellSize;
+
+            return new Vector3(xPos, yPos, _startPosition.z);
         }
     }
 }

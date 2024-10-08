@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets._project.CodeBase
 {
-    public class Cell : MonoBehaviour
+    public class Point : MonoBehaviour
     {
         private bool _isBusy;
 

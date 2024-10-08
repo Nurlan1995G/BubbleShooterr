@@ -11,14 +11,15 @@ namespace Assets._project.CodeBase
         [SerializeField] private BallManager _ballManager;
         [SerializeField] private GridManager _gridManager;
         [SerializeField] private List<Ball> _balls;
-        [SerializeField] private List<Cell> _cells;
+        [SerializeField] private List<Point> _cells;
+        [SerializeField] private Vector3 _startPosition;
 
         private void Awake()
         {
             _ballManager.Construct(_balls);
             _player.Construct(_ballManager);
-            GridZone gridZone = new(_gameConfig.ManagerData.RowsToFill, _gameConfig.ManagerData.TotalColumns,
-                _gameConfig.ManagerData.CellSize);
+
+            GridZone gridZone = new (_gameConfig.ManagerData, _startPosition);
 
             _gridManager.Construct(gridZone, _gameConfig.ManagerData, _ballManager, _cells);
         }
