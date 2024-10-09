@@ -16,6 +16,6 @@ namespace Assets._project.Config
         public int TotalColumns = 8;
         public int RowsToFill = 5;
         public float CellSize = 1.0f;
-        public int Point;
+        public int TotalBallsToLoad = 50; 
     }
 }

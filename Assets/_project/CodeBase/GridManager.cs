@@ -20,7 +20,7 @@ namespace Assets._project.CodeBase
             _cells = cells;
 
             InitializeCells();
-            FillGridWithRandomBalls();
+            FillGridWithBalls();
         }
 
         public void PlaceBallAtNearestFreePoint(Ball ball)
@@ -29,7 +29,7 @@ namespace Assets._project.CodeBase
 
             if (nearestFreePoint != null)
             {
-                ball.RemoveFromCurrentPoint(); 
+                //ball.RemoveFromCurrentPoint(); 
                 nearestFreePoint.PlaceBall(ball);  
             }
         }
@@ -84,6 +84,23 @@ namespace Assets._project.CodeBase
 
                     if (ball != null)
                         cell.PlaceBall(ball);
+                }
+            }
+        }
+
+        private void FillGridWithBalls()
+        {
+            for (int i = 0; i < _cells.Count; i++)
+            {
+                if (i <= _managerData.TotalBallsToLoad)
+                {
+                    if (!_cells[i].IsBusy)
+                    {
+                        Ball ball = _ballManager.GetRandomBall();
+
+                        if (ball != null)
+                            _cells[i].PlaceBall(ball);
+                    }
                 }
             }
         }

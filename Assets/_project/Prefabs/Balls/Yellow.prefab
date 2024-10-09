@@ -101,8 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody2D: {fileID: 685884376517400949}
   _triggerBall: {fileID: 345276129207637507}
-  <BallColorType>k__BackingField: 3
-  <ColorBall>k__BackingField: Yellow
+  <TypeBallColor>k__BackingField: 3
 --- !u!50 &685884376517400949
 Rigidbody2D:
   serializedVersion: 4

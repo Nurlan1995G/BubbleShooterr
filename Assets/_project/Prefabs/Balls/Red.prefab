@@ -101,8 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody2D: {fileID: 3117856481810515290}
   _triggerBall: {fileID: 8102355305244261120}
-  <BallColorType>k__BackingField: 1
-  <ColorBall>k__BackingField: Red
+  <TypeBallColor>k__BackingField: 1
 --- !u!58 &6274964837927353194
 CircleCollider2D:
   m_ObjectHideFlags: 0

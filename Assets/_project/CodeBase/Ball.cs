@@ -10,8 +10,7 @@ namespace Assets._project.CodeBase
 
         private Point _currentPoint;
 
-        [field: SerializeField] public BallColorType BallColorType { get; private set; }
-        [field: SerializeField] public string ColorBall { get; private set; }
+        [field: SerializeField] public TypeBallColor TypeBallColor { get; private set; }
 
         public void Construct(GridManager gridManager)
         {
@@ -44,12 +43,20 @@ namespace Assets._project.CodeBase
 
         public void RemoveFromCurrentPoint()
         {
-            _currentPoint.FreeCell();
-            _currentPoint = null;
+            if (_currentPoint != null)
+            {
+                Debug.Log("_currentPoint - " + _currentPoint.name + " - " + this.TypeBallColor);
+                _currentPoint.FreeCell();
+                _currentPoint = null;
+            }
+            else
+            {
+                Debug.LogWarning("Ball has no current point assigned!");
+            }
         }
     }
 
-    public enum BallColorType
+    public enum TypeBallColor
     {
         Green,
         Red,

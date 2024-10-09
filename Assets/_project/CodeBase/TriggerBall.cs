@@ -20,10 +20,16 @@ namespace Assets._project.CodeBase
         {
             if (collision.gameObject.TryGetComponent(out Ball otherBall))
             {
-                if (_ball.ColorBall == otherBall.ColorBall)
+                if (otherBall.GetCurrentPoint() == null)
+                {
+                    Debug.LogWarning("У другого мяча нет назначенного очка!");
+                    return;
+                }
+
+                if (_ball.TypeBallColor == otherBall.TypeBallColor)
                     CheckForMatch(otherBall);
                 else
-                    SetPointToBall(otherBall);
+                    SetPointToBall();
             }
         }
 
@@ -31,19 +37,24 @@ namespace Assets._project.CodeBase
         {
             List<Ball> matchingBalls = new List<Ball>();
             FindMatchingBalls(_ball, ref matchingBalls);
-            otherBall.RemoveFromCurrentPoint();
+
+            if (matchingBalls.Count == 2)
+                SetPointToBall();
 
             if (matchingBalls.Count > 2)
             {
                 foreach (Ball ball in matchingBalls)
+                {
+                    ball.RemoveFromCurrentPoint();
                     Destroy(ball.gameObject);
+                }
             }
         }
 
-        private void SetPointToBall(Ball ball)
+        private void SetPointToBall()
         {
-            _gridManager.PlaceBallAtNearestFreePoint(ball);
             _ball.StoppingMoving();
+            _gridManager.PlaceBallAtNearestFreePoint(_ball);
         }
 
         private void FindMatchingBalls(Ball currentBall, ref List<Ball> matchingBalls)
@@ -57,7 +68,7 @@ namespace Assets._project.CodeBase
                 {
                     Ball nextBall = collider.GetComponent<Ball>();
 
-                    if (nextBall != null && nextBall.ColorBall == currentBall.ColorBall)
+                    if (nextBall != null && nextBall.TypeBallColor == currentBall.TypeBallColor)
                         FindMatchingBalls(nextBall, ref matchingBalls);
                 }
             }
