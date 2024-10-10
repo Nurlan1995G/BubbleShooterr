@@ -5,16 +5,31 @@ namespace Assets._project.CodeBase
 {
     public class TriggerBall : MonoBehaviour
     {
-        [SerializeField] private Ball _ball;
+        private Ball _ball;
+        private GridManager _gridManager;
+
+        private Point _point;
+
+        public void Construct(Ball ball, GridManager gridManager)
+        {
+            _ball = ball ?? throw new System.ArgumentNullException(nameof(ball));
+            _gridManager = gridManager ?? throw new System.ArgumentNullException(nameof(gridManager));
+        }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.gameObject.TryGetComponent(out Ball otherBall))
             {
-                if (_ball.ColorBall == otherBall.ColorBall)
+                if (otherBall.GetCurrentPoint() == null)
+                {
+                    Debug.LogWarning("У другого мяча нет назначенного очка!");
+                    return;
+                }
+
+                if (_ball.TypeBallColor == otherBall.TypeBallColor)
                     CheckForMatch(otherBall);
                 else
-                    SetStopping();
+                    SetPointToBall();
             }
         }
 
@@ -23,17 +38,23 @@ namespace Assets._project.CodeBase
             List<Ball> matchingBalls = new List<Ball>();
             FindMatchingBalls(_ball, ref matchingBalls);
 
+            if (matchingBalls.Count == 2)
+                SetPointToBall();
+
             if (matchingBalls.Count > 2)
             {
                 foreach (Ball ball in matchingBalls)
+                {
+                    ball.RemoveFromCurrentPoint();
                     Destroy(ball.gameObject);
+                }
             }
         }
 
-        private void SetStopping()
+        private void SetPointToBall()
         {
-            _ball.Rigidbody2D.velocity = Vector2.zero;
-            _ball.Rigidbody2D.isKinematic = true;
+            _ball.StoppingMoving();
+            _gridManager.PlaceBallAtNearestFreePoint(_ball);
         }
 
         private void FindMatchingBalls(Ball currentBall, ref List<Ball> matchingBalls)
@@ -47,7 +68,7 @@ namespace Assets._project.CodeBase
                 {
                     Ball nextBall = collider.GetComponent<Ball>();
 
-                    if (nextBall != null && nextBall.ColorBall == currentBall.ColorBall)
+                    if (nextBall != null && nextBall.TypeBallColor == currentBall.TypeBallColor)
                         FindMatchingBalls(nextBall, ref matchingBalls);
                 }
             }

@@ -5,7 +5,7 @@ namespace Assets._project.CodeBase
 {
     public class BallManager : MonoBehaviour
     {
-        private Dictionary<string, List<Ball>> _ballsByColor; 
+        private Dictionary<TypeBallColor, List<Ball>> _ballsByColor; 
         private List<Ball> _balls;
 
         public void Construct(List<Ball> balls)
@@ -35,14 +35,14 @@ namespace Assets._project.CodeBase
 
         private void PopulateBallsByColor()
         {
-            _ballsByColor = new Dictionary<string, List<Ball>>();
+            _ballsByColor = new Dictionary<TypeBallColor, List<Ball>>();
 
             foreach (Ball ball in _balls)
             {
-                if (!_ballsByColor.ContainsKey(ball.ColorBall))
-                    _ballsByColor.Add(ball.ColorBall, new List<Ball>());
+                if (!_ballsByColor.ContainsKey(ball.TypeBallColor))
+                    _ballsByColor.Add(ball.TypeBallColor, new List<Ball>());
 
-                _ballsByColor[ball.ColorBall].Add(ball);
+                _ballsByColor[ball.TypeBallColor].Add(ball);
             }
         }
     }
