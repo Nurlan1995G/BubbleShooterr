@@ -17,3 +17,7 @@ MonoBehaviour:
     TotalColumns: 13
     RowsToFill: 5
     CellSize: 0.87
+    TotalBallsToLoad: 50
+  BallData:
+    MinSpeed: 5
+    MaxSpeed: 2

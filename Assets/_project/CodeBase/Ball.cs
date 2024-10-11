@@ -1,39 +1,51 @@
-﻿using System;
+﻿using Assets._project.CodeBase.Interface;
+using Assets._project.Config;
+using System;
 using UnityEngine;
 
 namespace Assets._project.CodeBase
 {
-    public class Ball : MonoBehaviour
+    public class Ball : MonoBehaviour, IBallMovement, IBallPosition
     {
         [SerializeField] private Rigidbody2D _rigidbody2D;
         [SerializeField] private TriggerBall _triggerBall;
 
+        private BallData _ballData;
         private Point _currentPoint;
+        private Vector3 _direction;
+        private bool _isMove;
 
         [field: SerializeField] public TypeBallColor TypeBallColor { get; private set; }
 
-        public void Construct(GridManager gridManager)
+        public void Construct(GridManager gridManager, BallData ballData, BallManager ballManager)
         {
-            if (gridManager is null)
-            {
-                throw new ArgumentNullException(nameof(gridManager));
-            }
+            _ballData = ballData ?? throw new ArgumentNullException(nameof(ballData));
 
-            _triggerBall.Construct(this, gridManager);
+            _triggerBall.Construct(this, gridManager, ballManager);
         }
 
-        public void MoveBall(Vector3 direction, float force)
+        public void MoveBall(Vector3 direction)
         {
-            _rigidbody2D.isKinematic = false;  
+            _rigidbody2D.isKinematic = false;
             _rigidbody2D.gravityScale = 0;
-            _rigidbody2D.velocity = direction * force; 
+            _rigidbody2D.velocity = direction * _ballData.MaxSpeed;
         }
+
+        public void SetPosition(Vector3 position) =>
+            transform.position = position;
 
         public void StoppingMoving()
         {
+            _isMove = false;
             _rigidbody2D.velocity = Vector2.zero;
             _rigidbody2D.isKinematic = true;
         }
+
+        public void Activate() =>
+            gameObject.SetActive(true);
+
+        public void Diactivate() =>
+            gameObject.SetActive(false);
 
         public void SetCurrentPoint(Point point) => 
             _currentPoint = point;
@@ -45,7 +57,6 @@ namespace Assets._project.CodeBase
         {
             if (_currentPoint != null)
             {
-                Debug.Log("_currentPoint - " + _currentPoint.name + " - " + this.TypeBallColor);
                 _currentPoint.FreeCell();
                 _currentPoint = null;
             }

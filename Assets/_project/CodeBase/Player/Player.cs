@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Assets._project.CodeBase.Interface;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 namespace Assets._project.CodeBase
@@ -12,52 +14,45 @@ namespace Assets._project.CodeBase
         [SerializeField] private float _maxLineLength = 5f;
 
         private BallManager _ballManager;
-        private Camera _camera;
-        private Ball _currentBall;
-        
-        private float _shootingForce;
-        private bool _isCharging;
+        private PlayerInput _input;
+        private CameraRotate _camera;
+        private IBallMovement _currentBall;
+
         private bool _hatShot;
 
-        public void Construct(BallManager ballManager)
+        public void Construct(BallManager ballManager, PlayerInput input, CameraRotate camera)
         {
             _ballManager = ballManager;
-
-            _camera = Camera.main;
+            _input = input;
+            _camera = camera;
         }
 
         private void Update()
         {
-            if(!_hatShot)
+            if (!_hatShot)
                 AimAndShoot();
         }
 
         private void AimAndShoot()
         {
             if (_currentBall == null)
-            {
-                _currentBall = _ballManager.GetRandomBall();
+                PrepareBallForShooting();
 
-                if (_currentBall != null)
-                {
-                    _currentBall.transform.position = _shootingPoint.position;
-                    _currentBall.gameObject.SetActive(true);
-                }
-            }
-
-            Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 aimDirection = new Vector2(mousePosition.x - transform.position.x, mousePosition.y - transform.position.y);
-            aimDirection.Normalize();
-
+            Vector2 aimDirection = _camera.AimDirection;
             DrawAimingLine(aimDirection);
 
-            if (Input.GetMouseButton(1))
-                _isCharging = true;
-
-            if (_isCharging && Input.GetMouseButtonUp(1))
-            {
+            if (_input.IsShotReleased())
                 ShootBall(aimDirection);
-                _isCharging = false;
+        }
+
+        private void PrepareBallForShooting()
+        {
+            _currentBall = _ballManager.GetRandomBall();
+
+            if (_currentBall != null)
+            {
+                _currentBall.SetPosition(_shootingPoint.position);
+                _currentBall.Activate();
             }
         }
 
@@ -65,8 +60,7 @@ namespace Assets._project.CodeBase
         {
             if (_currentBall != null)
             {
-                float force = Mathf.Lerp(_minShootingForce, _maxShootingForce, Time.time);
-                _currentBall.MoveBall(direction, force);
+                _currentBall.MoveBall(direction);
                 _hatShot = true;
                 StartCoroutine(DelayNextBall());
             }

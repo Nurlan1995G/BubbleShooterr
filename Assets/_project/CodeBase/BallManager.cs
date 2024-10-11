@@ -5,6 +5,8 @@ namespace Assets._project.CodeBase
 {
     public class BallManager : MonoBehaviour
     {
+        [SerializeField] private Vector3 _startPosition;
+
         private Dictionary<TypeBallColor, List<Ball>> _ballsByColor; 
         private List<Ball> _balls;
 
@@ -30,7 +32,9 @@ namespace Assets._project.CodeBase
 
         public void AddAfterReset(Ball ball)
         {
-
+            ball.transform.position = _startPosition;
+            ball.Diactivate();
+            _balls.Add(ball);
         }
 
         private void PopulateBallsByColor()

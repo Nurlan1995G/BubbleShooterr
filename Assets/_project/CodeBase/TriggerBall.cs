@@ -7,13 +7,14 @@ namespace Assets._project.CodeBase
     {
         private Ball _ball;
         private GridManager _gridManager;
-
+        private BallManager _ballManager;
         private Point _point;
 
-        public void Construct(Ball ball, GridManager gridManager)
+        public void Construct(Ball ball, GridManager gridManager, BallManager ballManager)
         {
             _ball = ball ?? throw new System.ArgumentNullException(nameof(ball));
             _gridManager = gridManager ?? throw new System.ArgumentNullException(nameof(gridManager));
+            _ballManager = ballManager;
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -46,7 +47,7 @@ namespace Assets._project.CodeBase
                 foreach (Ball ball in matchingBalls)
                 {
                     ball.RemoveFromCurrentPoint();
-                    Destroy(ball.gameObject);
+                    _ballManager.AddAfterReset(ball);
                 }
             }
         }

@@ -7,6 +7,14 @@ namespace Assets._project.Config
     public class GameConfig : ScriptableObject
     {
         public ManagerData ManagerData;
+        public BallData BallData;
+    }
+
+    [Serializable]
+    public class BallData
+    {
+        public float MinSpeed;
+        public float MaxSpeed;
     }
 
     [Serializable]
