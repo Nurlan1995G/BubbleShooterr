@@ -5,15 +5,16 @@ namespace Assets._project.CodeBase
 {
     public class TriggerBall : MonoBehaviour
     {
-        private Ball _ball;
+        private Ball _currentBall;
         private GridManager _gridManager;
-
+        private BallManager _ballManager;
         private Point _point;
 
-        public void Construct(Ball ball, GridManager gridManager)
+        public void Construct(Ball ball, GridManager gridManager, BallManager ballManager)
         {
-            _ball = ball ?? throw new System.ArgumentNullException(nameof(ball));
+            _currentBall = ball ?? throw new System.ArgumentNullException(nameof(ball));
             _gridManager = gridManager ?? throw new System.ArgumentNullException(nameof(gridManager));
+            _ballManager = ballManager;
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -26,35 +27,41 @@ namespace Assets._project.CodeBase
                     return;
                 }
 
-                if (_ball.TypeBallColor == otherBall.TypeBallColor)
+                if (_currentBall.TypeBallColor == otherBall.TypeBallColor)
                     CheckForMatch(otherBall);
                 else
-                    SetPointToBall();
+                {
+                    if (_currentBall.GetCurrentPoint() == null)
+                        SetPointToBall(_currentBall);
+                }
             }
         }
 
         private void CheckForMatch(Ball otherBall)
         {
             List<Ball> matchingBalls = new List<Ball>();
-            FindMatchingBalls(_ball, ref matchingBalls);
+            FindMatchingBalls(_currentBall, ref matchingBalls);
 
             if (matchingBalls.Count == 2)
-                SetPointToBall();
+                SetPointToBall(_currentBall);
 
             if (matchingBalls.Count > 2)
             {
                 foreach (Ball ball in matchingBalls)
                 {
                     ball.RemoveFromCurrentPoint();
-                    Destroy(ball.gameObject);
+                    _ballManager.AddAfterReset(ball);
                 }
             }
         }
 
-        private void SetPointToBall()
+        private void SetPointToBall(Ball ball)
         {
-            _ball.StoppingMoving();
-            _gridManager.PlaceBallAtNearestFreePoint(_ball);
+            if(ball != null)
+            {
+                ball.StoppingMoving();
+                _gridManager.PlaceBallAtNearestFreePoint(ball);
+            }
         }
 
         private void FindMatchingBalls(Ball currentBall, ref List<Ball> matchingBalls)

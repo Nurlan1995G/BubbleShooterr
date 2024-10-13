@@ -28,10 +28,7 @@ namespace Assets._project.CodeBase
             Point nearestFreePoint = FindNearestFreePoint(ball.transform.position);
 
             if (nearestFreePoint != null)
-            {
-                //ball.RemoveFromCurrentPoint(); 
                 nearestFreePoint.PlaceBall(ball);  
-            }
         }
 
         public Point FindNearestFreePoint(Vector3 position)
@@ -70,20 +67,6 @@ namespace Assets._project.CodeBase
                     Vector3 position = _gridZone.GetCellPosition(row, col);
                     _cells[index].transform.position = position;
                     index++;
-                }
-            }
-        }
-
-        private void FillGridWithRandomBalls()
-        {
-            foreach (Point cell in _cells)
-            {
-                if (!cell.IsBusy)  
-                {
-                    Ball ball = _ballManager.GetRandomBall();
-
-                    if (ball != null)
-                        cell.PlaceBall(ball);
                 }
             }
         }

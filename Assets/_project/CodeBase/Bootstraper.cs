@@ -13,11 +13,14 @@ namespace Assets._project.CodeBase
         [SerializeField] private List<Ball> _balls;
         [SerializeField] private List<Point> _cells;
         [SerializeField] private Vector3 _startPosition;
+        [SerializeField] private List<SideWall> _sideWalls;
 
         private void Awake()
         {
+            PlayerInput input = new(_player);
+
             _ballManager.Construct(_balls);
-            _player.Construct(_ballManager);
+            _player.Construct(_gameConfig.PlayerData, _ballManager, input, _sideWalls);
 
             GridZone gridZone = new (_gameConfig.ManagerData, _startPosition);
 
@@ -28,7 +31,7 @@ namespace Assets._project.CodeBase
         private void InitBall()
         {
             foreach (var ball in _balls)
-                ball.Construct(_gridManager);
+                ball.Construct(_gridManager, _gameConfig.BallData, _ballManager);
         }
     }
 }
