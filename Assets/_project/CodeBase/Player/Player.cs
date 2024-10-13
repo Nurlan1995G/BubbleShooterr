@@ -11,6 +11,7 @@ namespace Assets._project.CodeBase
     {
         [SerializeField] private LineRenderer _lineRenderer;
         [SerializeField] private Transform _nextBallPosition;
+        [SerializeField] private Transform _shootPosition;
         [SerializeField] private TextMeshProUGUI _textCountBall;
         [SerializeField] private int _totalBalls = 5; 
 
@@ -133,11 +134,39 @@ namespace Assets._project.CodeBase
         {
             _lineRenderer.enabled = true;
             _lineRenderer.positionCount = 2;
-            _lineRenderer.SetPosition(0, transform.position);
+            _lineRenderer.SetPosition(0, _shootPosition.position);
 
-            Vector3 endPosition = transform.position + (Vector3)aimDirection * _playerData.MaxLineLength;
-            _lineRenderer.SetPosition(1, endPosition);
+            RaycastHit2D hit = Physics2D.Raycast(_shootPosition.position, aimDirection, 10);
+            Vector3 endPosition = _shootPosition.position + (Vector3)aimDirection * 10;
+
+            if (hit.collider != null)
+            {
+                if (hit.collider.TryGetComponent(out SideWall sideWall))
+                {
+                    Vector2 reflectedDirection = Vector2.Reflect(aimDirection, hit.normal);
+
+                    RaycastHit2D secondHit = Physics2D.Raycast(hit.point, reflectedDirection, 10);
+
+                    _lineRenderer.positionCount = 3;
+                    _lineRenderer.SetPosition(1, hit.point);
+
+                    if (secondHit.collider != null && secondHit.collider.TryGetComponent(out IBallControll ballComponent))
+                        endPosition = secondHit.point;
+                    else
+                        endPosition = (Vector3)hit.point + (Vector3)reflectedDirection * 20;
+
+                    _lineRenderer.SetPosition(2, endPosition);
+                }
+                else if (hit.collider.TryGetComponent(out IBallControll ball))
+                {
+                    endPosition = hit.point;
+                    _lineRenderer.SetPosition(1, endPosition);
+                }
+            }
+            else
+                _lineRenderer.SetPosition(1, endPosition);
         }
+
 
         private IEnumerator DelayNextBall()
         {
