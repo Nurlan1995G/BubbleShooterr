@@ -1,5 +1,7 @@
 ﻿using Assets._project.CodeBase.Interface;
+using Assets._project.Config;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -7,29 +9,54 @@ namespace Assets._project.CodeBase
 {
     public class Player : MonoBehaviour
     {
-        [SerializeField] private Transform _shootingPoint;
-        [SerializeField] private float _maxShootingForce = 15f;
-        [SerializeField] private float _minShootingForce = 5f;
         [SerializeField] private LineRenderer _lineRenderer;
-        [SerializeField] private float _maxLineLength = 5f;
+        [SerializeField] private Transform _nextBallPosition;
+        [SerializeField] private TextMeshProUGUI _textCountBall;
+        [SerializeField] private int _totalBalls = 5; 
 
+        private PlayerData _playerData;
         private BallManager _ballManager;
         private PlayerInput _input;
-        private CameraRotate _camera;
-        private IBallMovement _currentBall;
+        private List<SideWall> _sideWalls;
+        private IBallControll _currentBall;
+        private IBallControll _nextBall;
 
-        private bool _hatShot;
+        private bool _hasShot;
+        private int _remainingBalls; 
 
-        public void Construct(BallManager ballManager, PlayerInput input, CameraRotate camera)
+        public void Construct(PlayerData playerData, BallManager ballManager, PlayerInput input, List<SideWall> sideWalls)
         {
+            _playerData = playerData;
             _ballManager = ballManager;
             _input = input;
-            _camera = camera;
+            _sideWalls = sideWalls;
+
+            _remainingBalls = _totalBalls; 
+            UpdateBallCountUI(); 
+            InitializeBalls();
+        }
+
+        private void InitializeBalls()
+        {
+            if (_remainingBalls > 0)
+            {
+                _currentBall = _ballManager.GetRandomBall();
+
+                if (_currentBall != null)
+                {
+                    _currentBall.SetPosition(transform.position);
+                    _currentBall.Activate();
+                }
+
+                PrepareNextBall();
+            }
         }
 
         private void Update()
         {
-            if (!_hatShot)
+            _input.Update();
+
+            if (!_hasShot && _remainingBalls > 0)
                 AimAndShoot();
         }
 
@@ -38,8 +65,10 @@ namespace Assets._project.CodeBase
             if (_currentBall == null)
                 PrepareBallForShooting();
 
-            Vector2 aimDirection = _camera.AimDirection;
-            DrawAimingLine(aimDirection);
+            Vector2 aimDirection = _input.AimDirection;
+
+            if (_input.IsChargingShot())
+                DrawAimingLine(aimDirection);
 
             if (_input.IsShotReleased())
                 ShootBall(aimDirection);
@@ -47,32 +76,66 @@ namespace Assets._project.CodeBase
 
         private void PrepareBallForShooting()
         {
-            _currentBall = _ballManager.GetRandomBall();
-
-            if (_currentBall != null)
+            if (_nextBall != null)
             {
-                _currentBall.SetPosition(_shootingPoint.position);
+                _currentBall = _nextBall;
+                _currentBall.SetPosition(transform.position);
                 _currentBall.Activate();
+
+                PrepareNextBall();
             }
+        }
+
+        private void PrepareNextBall()
+        {
+            if (_remainingBalls > 1)
+            {
+                _nextBall = _ballManager.GetRandomBall();
+
+                if (_nextBall != null)
+                {
+                    _nextBall.SetPosition(_nextBallPosition.position);
+                    _nextBall.Activate(); 
+                }
+            }
+            else
+                _nextBall = null;
         }
 
         private void ShootBall(Vector2 direction)
         {
             if (_currentBall != null)
             {
-                _currentBall.MoveBall(direction);
-                _hatShot = true;
+                float force = CalculateShootingForce();
+                _currentBall.MoveBall(direction * force);
+
+                UpdateSideWallsWithBallSpeed();
+                _remainingBalls--; 
+                UpdateBallCountUI(); 
+                _hasShot = true;
                 StartCoroutine(DelayNextBall());
             }
+        }
+
+        private float CalculateShootingForce()
+        {
+            float pullDistance = Mathf.Clamp(_input.PullDistance, 0, _playerData.MaxLineLength);
+            return Mathf.Lerp(_playerData.MinShootingForce, _playerData.MaxShootingForce, pullDistance / _playerData.MaxLineLength);
+        }
+
+        private void UpdateSideWallsWithBallSpeed()
+        {
+            foreach (SideWall sideWall in _sideWalls)
+                sideWall.SetBallSpeed(_currentBall);
         }
 
         private void DrawAimingLine(Vector2 aimDirection)
         {
             _lineRenderer.enabled = true;
             _lineRenderer.positionCount = 2;
-            _lineRenderer.SetPosition(0, _shootingPoint.position);
+            _lineRenderer.SetPosition(0, transform.position);
 
-            Vector3 endPosition = _shootingPoint.position + (Vector3)aimDirection * _maxLineLength;
+            Vector3 endPosition = transform.position + (Vector3)aimDirection * _playerData.MaxLineLength;
             _lineRenderer.SetPosition(1, endPosition);
         }
 
@@ -80,7 +143,13 @@ namespace Assets._project.CodeBase
         {
             yield return new WaitForSeconds(0.5f);
             _currentBall = null;
-            _hatShot = false;
+            _hasShot = false;
+
+            if (_remainingBalls > 0)
+                PrepareBallForShooting();
         }
+
+        private void UpdateBallCountUI() =>
+            _textCountBall.text = _remainingBalls.ToString();
     }
 }

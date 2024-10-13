@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets._project.CodeBase
 {
-    public class Ball : MonoBehaviour, IBallMovement, IBallPosition
+    public class Ball : MonoBehaviour, IBallControll
     {
         [SerializeField] private Rigidbody2D _rigidbody2D;
         [SerializeField] private TriggerBall _triggerBall;
@@ -28,7 +28,7 @@ namespace Assets._project.CodeBase
         {
             _rigidbody2D.isKinematic = false;
             _rigidbody2D.gravityScale = 0;
-            _rigidbody2D.velocity = direction * _ballData.MaxSpeed;
+            _rigidbody2D.velocity = direction;
         }
 
         public void SetPosition(Vector3 position) =>
@@ -44,7 +44,7 @@ namespace Assets._project.CodeBase
         public void Activate() =>
             gameObject.SetActive(true);
 
-        public void Diactivate() =>
+        public void Deactivate() =>
             gameObject.SetActive(false);
 
         public void SetCurrentPoint(Point point) => 
@@ -61,9 +61,12 @@ namespace Assets._project.CodeBase
                 _currentPoint = null;
             }
             else
-            {
-                Debug.LogWarning("Ball has no current point assigned!");
-            }
+                Debug.LogWarning("Текущее очко мячу не присвоено!");
+        }
+
+        public Vector2 GetBallSpeed()
+        {
+            return _rigidbody2D.velocity;
         }
     }
 

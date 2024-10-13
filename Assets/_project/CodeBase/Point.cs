@@ -10,18 +10,16 @@ namespace Assets._project.CodeBase
 
         public void PlaceBall(Ball ball)
         {
-            if (!_isBusy) 
+            if (!_isBusy && ball.GetCurrentPoint() == null) 
             {
                 ball.transform.position = transform.position;
                 ball.gameObject.SetActive(true);
                 ball.SetCurrentPoint(this);
-                _isBusy = true; 
+                _isBusy = true;
             }
         }
 
-        public void FreeCell()
-        {
-            _isBusy = false;  
-        }
+        public void FreeCell() => 
+            _isBusy = false;
     }
 }

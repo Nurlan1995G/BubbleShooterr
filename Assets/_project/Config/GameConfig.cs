@@ -8,6 +8,16 @@ namespace Assets._project.Config
     {
         public ManagerData ManagerData;
         public BallData BallData;
+        public PlayerData PlayerData;
+    }
+
+    [Serializable]
+    public class PlayerData
+    {
+        public float MaxShootingForce = 15f;
+        public float MinShootingForce = 5f;
+        public float MaxLineLength = 5f;
+        public float MaxPullDistance = 10f;
     }
 
     [Serializable]

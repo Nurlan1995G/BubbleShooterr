@@ -13,15 +13,14 @@ namespace Assets._project.CodeBase
         [SerializeField] private List<Ball> _balls;
         [SerializeField] private List<Point> _cells;
         [SerializeField] private Vector3 _startPosition;
-        [SerializeField] private CameraRotate _cameraRotate;
+        [SerializeField] private List<SideWall> _sideWalls;
 
         private void Awake()
         {
-            PlayerInput input = new();
+            PlayerInput input = new(_player);
 
             _ballManager.Construct(_balls);
-            _player.Construct(_ballManager, input, _cameraRotate);
-            _cameraRotate.Construct(_player);
+            _player.Construct(_gameConfig.PlayerData, _ballManager, input, _sideWalls);
 
             GridZone gridZone = new (_gameConfig.ManagerData, _startPosition);
 
