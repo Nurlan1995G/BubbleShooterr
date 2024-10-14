@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 3175717674494406718}
   - component: {fileID: 1998949468755738523}
   - component: {fileID: 4348584682484714321}
-  - component: {fileID: -7164799444453568208}
   - component: {fileID: 6274964837927353194}
-  - component: {fileID: 8102355305244261120}
   - component: {fileID: 3117856481810515290}
+  - component: {fileID: 2157349625222068993}
+  - component: {fileID: 1294256961554936912}
   m_Layer: 6
   m_Name: Red
   m_TagString: Untagged
@@ -87,21 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-7164799444453568208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835502820065241732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e82d835d49338a45b00f346cc4e2f27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rigidbody2D: {fileID: 3117856481810515290}
-  _triggerBall: {fileID: 8102355305244261120}
-  <TypeBallColor>k__BackingField: 1
 --- !u!58 &6274964837927353194
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -118,18 +103,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.0088
---- !u!114 &8102355305244261120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835502820065241732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31656ec55207b9b47add67fb6b6587df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &3117856481810515290
 Rigidbody2D:
   serializedVersion: 4
@@ -151,3 +124,30 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &2157349625222068993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835502820065241732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b198f727342c77244a6bb0bb4f09d08c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rigidbody2D: {fileID: 3117856481810515290}
+  _triggerBall: {fileID: 1294256961554936912}
+  <TypeBallColor>k__BackingField: 1
+--- !u!114 &1294256961554936912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835502820065241732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32589899db5efaf44a3b0713e418fb89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

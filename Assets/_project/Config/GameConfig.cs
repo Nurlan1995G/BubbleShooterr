@@ -9,6 +9,7 @@ namespace Assets._project.Config
         public ManagerData ManagerData;
         public BallData BallData;
         public PlayerData PlayerData;
+        public LogicData LogicData;
     }
 
     [Serializable]
@@ -36,5 +37,11 @@ namespace Assets._project.Config
         public int RowsToFill = 5;
         public float CellSize = 1.0f;
         public int TotalBallsToLoad = 50; 
+    }
+
+    [Serializable]
+    public class LogicData
+    {
+        public int RewardToPlayer = 10;
     }
 }
