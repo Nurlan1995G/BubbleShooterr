@@ -19,11 +19,13 @@ MonoBehaviour:
     CellSize: 0.87
     TotalBallsToLoad: 50
   BallData:
-    MinSpeed: 5
-    MaxSpeed: 5
+    MinSpeed: 1
+    MaxSpeed: 3
   PlayerData:
     MaxShootingForce: 15
     MinShootingForce: 5
     MaxLineLength: 0.5
     MaxPullDistance: 10
     TotalBall: 30
+  LogicData:
+    RewardToPlayer: 10

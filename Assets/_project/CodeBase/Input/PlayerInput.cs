@@ -14,7 +14,6 @@ namespace Assets._project.CodeBase
         public Vector2 AimDirection => _aimDirection;
         public float PullDistance { get; private set; }  
 
-
         public PlayerInput(Player player)
         {
             _player = player;
@@ -30,7 +29,6 @@ namespace Assets._project.CodeBase
                 StartPull();
         }
 
-
         private Vector2 GetAimDirection()
         {
             Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
@@ -38,15 +36,11 @@ namespace Assets._project.CodeBase
             return _aimDirection.normalized;
         }
 
-        public bool IsChargingShot()
-        {
-            return Input.GetMouseButton(1);
-        }
+        public bool IsChargingShot() => 
+            Input.GetMouseButton(1);
 
-        public bool IsShotReleased()
-        {
-            return Input.GetMouseButtonUp(1);
-        }
+        public bool IsShotReleased() => 
+            Input.GetMouseButtonUp(1);
 
         public void StartPull()
         {

@@ -1,4 +1,5 @@
-﻿using Assets._project.CodeBase.Sounds;
+﻿using Assets._project.CodeBase.Corountine;
+using Assets._project.CodeBase.Sounds;
 using Assets._project.Config;
 using System;
 using System.Collections.Generic;
@@ -17,17 +18,20 @@ namespace Assets._project.CodeBase
         [SerializeField] private Vector3 _startPosition;
         [SerializeField] private List<SideWall> _sideWalls;
         [SerializeField] private SoundHandler _soundHandler;
+        [SerializeField] private CoroutineRunner _coroutineRunner;
+        [SerializeField] private ParticleSystem _effectNextBall;
 
         private void Awake()
         {
             PlayerInput input = new(_player);
 
             _ballManager.Construct(_balls);
-            _player.Construct(_gameConfig.PlayerData, _ballManager, input, _sideWalls);
+            _player.Construct(_gameConfig.PlayerData, input, _effectNextBall, _ballManager, _sideWalls);
 
             GridZone gridZone = new (_gameConfig.ManagerData, _startPosition);
 
             _gridManager.Construct(gridZone, _gameConfig.ManagerData, _ballManager, _cells);
+            _coroutineRunner.Initialize();
             InitBall();
             InitSound();
         }
@@ -38,15 +42,13 @@ namespace Assets._project.CodeBase
             _soundHandler.PlayBackground();
         }
 
-        private void InitSound()
-        {
+        private void InitSound() => 
             _soundHandler.Initialize();
-        }
 
         private void InitBall()
         {
             foreach (var ball in _balls)
-                ball.Construct(_gridManager, _gameConfig.BallData, _ballManager, _player);
+                ball.Construct(_gridManager, _gameConfig.LogicData, _ballManager, _player);
         }
     }
 }
