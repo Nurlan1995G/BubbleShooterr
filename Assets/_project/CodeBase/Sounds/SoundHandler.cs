@@ -8,10 +8,11 @@ namespace Assets._project.CodeBase.Sounds
         [SerializeField] private AudioSource _win;
         [SerializeField] private AudioSource _lose;
         [SerializeField] private AudioSource _buy;
+        [SerializeField] private AudioSource _burst;
 
         public static SoundHandler Instance { get; private set; }
 
-        private void Awake()
+        public void Initialize()
         {
             if (Instance == null)
             {
@@ -24,14 +25,20 @@ namespace Assets._project.CodeBase.Sounds
             }
         }
 
-        private void Start() => PlayBackground();
-
         public void PlayWin()
         {
             if (_win != null)
                 _win.Play();
             else
                 Debug.LogWarning("Win sound not assigned!");
+        }
+
+        public void PlayBurst()
+        {
+            if (_burst != null)
+                _burst.Play();
+            else
+                Debug.LogWarning("Burst sound not assigned!");
         }
 
         public void PlayLose()
@@ -50,7 +57,7 @@ namespace Assets._project.CodeBase.Sounds
                 Debug.LogWarning("Buy sound not assigned!");
         }
 
-        private void PlayBackground()
+        public void PlayBackground()
         {
             if (_background != null)
                 _background.Play();

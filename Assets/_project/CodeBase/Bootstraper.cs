@@ -1,4 +1,6 @@
-﻿using Assets._project.Config;
+﻿using Assets._project.CodeBase.Sounds;
+using Assets._project.Config;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +16,7 @@ namespace Assets._project.CodeBase
         [SerializeField] private List<Point> _cells;
         [SerializeField] private Vector3 _startPosition;
         [SerializeField] private List<SideWall> _sideWalls;
+        [SerializeField] private SoundHandler _soundHandler;
 
         private void Awake()
         {
@@ -26,12 +29,24 @@ namespace Assets._project.CodeBase
 
             _gridManager.Construct(gridZone, _gameConfig.ManagerData, _ballManager, _cells);
             InitBall();
+            InitSound();
+        }
+
+        private void Start()
+        {
+            _soundHandler.PlayBurst();
+            _soundHandler.PlayBackground();
+        }
+
+        private void InitSound()
+        {
+            _soundHandler.Initialize();
         }
 
         private void InitBall()
         {
             foreach (var ball in _balls)
-                ball.Construct(_gridManager, _gameConfig.BallData, _ballManager);
+                ball.Construct(_gridManager, _gameConfig.BallData, _ballManager, _player);
         }
     }
 }

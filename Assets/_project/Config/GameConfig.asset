@@ -26,3 +26,4 @@ MonoBehaviour:
     MinShootingForce: 5
     MaxLineLength: 0.5
     MaxPullDistance: 10
+    TotalBall: 30
