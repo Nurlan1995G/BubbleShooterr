@@ -17,11 +17,11 @@ namespace Assets._project.CodeBase
 
         [field: SerializeField] public TypeBallColor TypeBallColor { get; private set; }
 
-        public void Construct(GridManager gridManager, BallData ballData, BallManager ballManager)
+        public void Construct(GridManager gridManager, BallData ballData, BallManager ballManager, Player player)
         {
             _ballData = ballData ?? throw new ArgumentNullException(nameof(ballData));
 
-            _triggerBall.Construct(this, gridManager, ballManager);
+            _triggerBall.Construct(this, gridManager, ballManager, player);
         }
 
         public void MoveBall(Vector3 direction)
@@ -60,8 +60,6 @@ namespace Assets._project.CodeBase
                 _currentPoint.FreeCell();
                 _currentPoint = null;
             }
-            else
-                Debug.LogWarning("Текущее очко мячу не присвоено!");
         }
 
         public Vector2 GetBallSpeed()

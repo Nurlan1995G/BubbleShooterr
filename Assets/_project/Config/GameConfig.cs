@@ -18,6 +18,7 @@ namespace Assets._project.Config
         public float MinShootingForce = 5f;
         public float MaxLineLength = 5f;
         public float MaxPullDistance = 10f;
+        public int TotalBall = 30;
     }
 
     [Serializable]

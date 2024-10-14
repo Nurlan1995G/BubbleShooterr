@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Assets._project.CodeBase.Sounds;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets._project.CodeBase
@@ -9,24 +10,20 @@ namespace Assets._project.CodeBase
         private GridManager _gridManager;
         private BallManager _ballManager;
         private Point _point;
+        private Player _player;
 
-        public void Construct(Ball ball, GridManager gridManager, BallManager ballManager)
+        public void Construct(Ball ball, GridManager gridManager, BallManager ballManager, Player player)
         {
             _currentBall = ball ?? throw new System.ArgumentNullException(nameof(ball));
             _gridManager = gridManager ?? throw new System.ArgumentNullException(nameof(gridManager));
             _ballManager = ballManager;
+            _player = player;
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.gameObject.TryGetComponent(out Ball otherBall))
             {
-                if (otherBall.GetCurrentPoint() == null)
-                {
-                    Debug.LogWarning("У другого мяча нет назначенного очка!");
-                    return;
-                }
-
                 if (_currentBall.TypeBallColor == otherBall.TypeBallColor)
                     CheckForMatch(otherBall);
                 else
@@ -49,9 +46,12 @@ namespace Assets._project.CodeBase
             {
                 foreach (Ball ball in matchingBalls)
                 {
+                    _player.AddScore(10);
                     ball.RemoveFromCurrentPoint();
                     _ballManager.AddAfterReset(ball);
                 }
+
+                SoundHandler.Instance.PlayBurst();
             }
         }
 

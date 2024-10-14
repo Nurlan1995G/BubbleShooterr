@@ -1,4 +1,5 @@
 ﻿using Assets._project.CodeBase.Interface;
+using Assets._project.CodeBase.Sounds;
 using Assets._project.Config;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace Assets._project.CodeBase
         [SerializeField] private Transform _nextBallPosition;
         [SerializeField] private Transform _shootPosition;
         [SerializeField] private TextMeshProUGUI _textCountBall;
-        [SerializeField] private int _totalBalls = 5; 
+        [SerializeField] private ParticleSystem _particleEffect;
+        [SerializeField] private TextMeshProUGUI _scoreText;
 
         private PlayerData _playerData;
         private BallManager _ballManager;
@@ -23,7 +25,8 @@ namespace Assets._project.CodeBase
         private IBallControll _nextBall;
 
         private bool _hasShot;
-        private int _remainingBalls; 
+        private int _remainingBalls;
+        private int _score;
 
         public void Construct(PlayerData playerData, BallManager ballManager, PlayerInput input, List<SideWall> sideWalls)
         {
@@ -32,7 +35,7 @@ namespace Assets._project.CodeBase
             _input = input;
             _sideWalls = sideWalls;
 
-            _remainingBalls = _totalBalls; 
+            _remainingBalls = _playerData.TotalBall; 
             UpdateBallCountUI(); 
             InitializeBalls();
         }
@@ -61,6 +64,12 @@ namespace Assets._project.CodeBase
                 AimAndShoot();
         }
 
+        public void AddScore(int score)
+        {
+            _score += score;
+            UpdateScoreTextUI();
+        }
+
         private void AimAndShoot()
         {
             if (_currentBall == null)
@@ -68,8 +77,7 @@ namespace Assets._project.CodeBase
 
             Vector2 aimDirection = _input.AimDirection;
 
-            if (_input.IsChargingShot())
-                DrawAimingLine(aimDirection);
+            DrawAimingLine(aimDirection);
 
             if (_input.IsShotReleased())
                 ShootBall(aimDirection);
@@ -82,7 +90,6 @@ namespace Assets._project.CodeBase
                 _currentBall = _nextBall;
                 _currentBall.SetPosition(transform.position);
                 _currentBall.Activate();
-
                 PrepareNextBall();
             }
         }
@@ -92,6 +99,7 @@ namespace Assets._project.CodeBase
             if (_remainingBalls > 1)
             {
                 _nextBall = _ballManager.GetRandomBall();
+                _particleEffect.Play();
 
                 if (_nextBall != null)
                 {
@@ -100,7 +108,10 @@ namespace Assets._project.CodeBase
                 }
             }
             else
+            {
                 _nextBall = null;
+                SoundHandler.Instance.PlayLose();
+            }
         }
 
         private void ShootBall(Vector2 direction)
@@ -180,5 +191,8 @@ namespace Assets._project.CodeBase
 
         private void UpdateBallCountUI() =>
             _textCountBall.text = _remainingBalls.ToString();
+
+        private void UpdateScoreTextUI() =>
+            _scoreText.text = _score.ToString();
     }
 }
