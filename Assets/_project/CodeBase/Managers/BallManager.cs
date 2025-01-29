@@ -43,7 +43,6 @@ namespace Assets._project.CodeBase
         {
             ball.transform.position = _startPosition;
             ball.Deactivate();
-            Debug.Log(ball.transform.position + " ball position " + ball.name);
 
             if (!_balls.Contains(ball) && !_reserveBalls.Contains(ball))
                 _reserveBalls.Add(ball);  
